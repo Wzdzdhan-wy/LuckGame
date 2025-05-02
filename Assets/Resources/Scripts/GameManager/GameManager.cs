@@ -15,7 +15,7 @@ namespace LuckGame {
             //注册事件
             EventCenterManager.Instance().AddEventListener((int)GameController.OnRoundStart, RoundStart);
             EventCenterManager.Instance().AddEventListener((int)GameController.OnCoinChanged, CoinChanged);
-          
+            MyEventBus.OnItemAdded += ItemAdd;
         }
        
         public void Start()
@@ -40,7 +40,9 @@ namespace LuckGame {
         //事件处理函数：道具添加
         private void ItemAdd(Item item)
         {
+            Debug.Log("Item Add");
            
+
         }
 
 

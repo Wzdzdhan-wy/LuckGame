@@ -1,3 +1,4 @@
+using DG.Tweening;
 using LuckGame;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,7 +18,7 @@ namespace LuckGame
         public float acceleration = 0.01f;
         public float interval = 0.5f;
         public int spinRounds = 3;
-        public List<Color> colors = new List<Color>();
+        public List<Color> colors = new();
 
         [Header("Debug")]
         [SerializeField] private int currentIndex = 0;
@@ -31,7 +32,7 @@ namespace LuckGame
             colors.Add(Color.blue);
             colors.Add(Color.yellow);
             colors.Add(Color.magenta);
-
+            DOTween.Init();
             //注册事件
             Debug.Log("ScenceController 注册事件");
             EventCenterManager.Instance().AddEventListener((int)SpinControl.SPIN_START, StartSpin);
@@ -40,6 +41,7 @@ namespace LuckGame
 
         public void StartSpin()
         {
+            if (isSpinning) return;
             this.isSpinning = true;
             MonoManager.Instance().StartCoroutine(SlideShow());
         }
@@ -51,8 +53,9 @@ namespace LuckGame
             {
                 if (colors.Count > 0)
                 {
+                   
+                    currentIndex = Random.Range(0, colors.Count);
                     image.color = colors[currentIndex];
-                    currentIndex = (currentIndex + 1) % colors.Count;
                 }
                 yield return new WaitForSeconds(interval);
             }
@@ -60,6 +63,7 @@ namespace LuckGame
         
         public void StopSpin()
         {
+            if (!isSpinning) return;
             this.isSpinning = false;
             MonoManager.Instance().StopCoroutine(SlideShow());
             
