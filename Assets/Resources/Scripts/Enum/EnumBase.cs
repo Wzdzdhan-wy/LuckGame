@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LuckGame
 {
-    enum CardRare
+    public enum CardRare
     {
         COMMON = 0,
         RARE = 1,
@@ -14,31 +14,29 @@ namespace LuckGame
         LEGENDARY = 3,
         MYTHIC = 4
     }
-    enum CardType
+    public enum CardType
     {   
         INHERIT = 0,
         PROP = 1
         
     }
-    enum EffectType
+    public enum EffectType
     {
         None = 0,
     }
-    enum ItemType
+    public enum ItemType
     {
         none = 0,
         weapon = 1,
         armor = 2,
     }
-    enum GameController
+    public enum GameController
     {
-        OnItemAdded = 1,
-        OnRoundStart = 2,
-        OnCoinChanged = 3,
+        OnItemAdded,
+        OnRoundStart,
+        OnCoinChanged,
+        SPIN_START,
+        SPIN_STOP,
     }
-    enum SpinControl
-    {
-        SPIN_START = 4,
-        SPIN_STOP = 5,
-    } 
+ 
 }

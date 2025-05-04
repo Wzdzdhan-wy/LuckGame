@@ -13,8 +13,8 @@ namespace LuckGame {
             Instance();
             Debug.Log("GameManager 开始注册事件");
             //注册事件
-            EventCenterManager.Instance().AddEventListener((int)GameController.OnRoundStart, RoundStart);
-            EventCenterManager.Instance().AddEventListener((int)GameController.OnCoinChanged, CoinChanged);
+            EventCenterManager.Instance().AddEventListener(GameController.OnRoundStart, RoundStart);
+            EventCenterManager.Instance().AddEventListener(GameController.OnCoinChanged, CoinChanged);
             MyEventBus.OnItemAdded += ItemAdd;
         }
        
@@ -35,7 +35,7 @@ namespace LuckGame {
         private void RoundStart()
         {
             Debug.Log("Round Start");
-            EventCenterManager.Instance().DispatchEvent((int)SpinControl.SPIN_START);
+            EventCenterManager.Instance().TriggerEvent(GameController.SPIN_START);
         }
         //事件处理函数：道具添加
         private void ItemAdd(Item item)

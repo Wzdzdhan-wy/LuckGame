@@ -524,8 +524,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   content: {fileID: 929963702}
   itemHeight: 100
-  spinDuration: 5
-  resultIndex: 2
+  baseSpeed: 0.05
+  minSpins: 20
+  decelerateDuration: 2.5
+  stopEase: 15
 --- !u!114 &929963704
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -543,7 +545,7 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
+  m_ChildAlignment: 4
   m_Spacing: 10
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
@@ -663,7 +665,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -98.67297, y: 73}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1070835897
@@ -1181,8 +1183,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -52, y: -271}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 0, y: -288}
+  m_SizeDelta: {x: 160, y: 100.5907}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2124338540
 MonoBehaviour:

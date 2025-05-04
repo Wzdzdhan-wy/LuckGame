@@ -35,8 +35,8 @@ namespace LuckGame
             DOTween.Init();
             //注册事件
             Debug.Log("ScenceController 注册事件");
-            EventCenterManager.Instance().AddEventListener((int)SpinControl.SPIN_START, StartSpin);
-            EventCenterManager.Instance().AddEventListener((int)SpinControl.SPIN_STOP, StopSpin);
+            EventCenterManager.Instance().AddEventListener(GameController.SPIN_START, StartSpin);
+            EventCenterManager.Instance().AddEventListener(GameController.SPIN_STOP, StopSpin);
         }
 
         public void StartSpin()
@@ -69,5 +69,12 @@ namespace LuckGame
             
         }
 
+        private void OnDisable()
+        {
+            //注销事件
+            Debug.Log("ScenceController 注销事件");
+            EventCenterManager.Instance().RemoveEventListener(GameController.SPIN_START, StartSpin);
+            EventCenterManager.Instance().RemoveEventListener(GameController.SPIN_STOP, StopSpin);
+        }
     }
 }

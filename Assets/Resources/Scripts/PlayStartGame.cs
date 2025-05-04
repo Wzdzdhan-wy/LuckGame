@@ -7,7 +7,7 @@ public class PlayStartGame : MonoBehaviour
     public void OnStartButtonClick()
     {
         Debug.Log("buttonOnClick");
-        EventCenterManager.Instance().DispatchEvent((int)GameController.OnRoundStart);
+        EventCenterManager.Instance().TriggerEvent(GameController.OnRoundStart);
        /* EventCenterManager.Instance().DispatchEvent((int)SpinControl.SPIN_START);*/
     }
  

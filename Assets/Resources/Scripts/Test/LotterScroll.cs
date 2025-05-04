@@ -21,7 +21,7 @@ public class LotteryScroll : MonoBehaviour
     private int virtualIndex;          // 虚拟位置索引
     private bool isSpinning = false;
     private int targetIndex = 0;
-    private List<RectTransform> itemPool = new List<RectTransform>();
+    private List<RectTransform> itemPool = new();
 
     void Start()
     {
