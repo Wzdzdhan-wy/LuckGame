@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
+
 using UnityEngine;
 namespace LuckGame { 
     public class GameManager : SingleInstanceAutoBase<GameManager>
@@ -10,12 +8,12 @@ namespace LuckGame {
 
         public void Awake()
         {
-            Instance();
+            EventCenterManager.Instance(true);
             Debug.Log("GameManager 开始注册事件");
             //注册事件
             EventCenterManager.Instance().AddEventListener(GameController.OnRoundStart, RoundStart);
             EventCenterManager.Instance().AddEventListener(GameController.OnCoinChanged, CoinChanged);
-            MyEventBus.OnItemAdded += ItemAdd;
+            EventCenterManager.Instance().AddEventListener<Item>(GameController.OnItemAdded, ItemAdd);
         }
        
         public void Start()
@@ -36,12 +34,13 @@ namespace LuckGame {
         {
             Debug.Log("Round Start");
             EventCenterManager.Instance().TriggerEvent(GameController.SPIN_START);
+
         }
         //事件处理函数：道具添加
         private void ItemAdd(Item item)
         {
             Debug.Log("Item Add");
-           
+          
 
         }
 

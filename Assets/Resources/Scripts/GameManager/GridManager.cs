@@ -2,8 +2,8 @@
 {
     internal class GridManager : SingleInstanceAutoBase<GameManager>
     {
-        Card[,] cards = new Card[4,5];
-       
+        Card[,] GameGrid = new Card[4,5];
+        
         private GridManager() { }
 
         public void RandomLayout()

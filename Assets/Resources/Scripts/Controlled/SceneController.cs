@@ -1,80 +1,76 @@
 using DG.Tweening;
-using LuckGame;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-namespace LuckGame
+
+public class SceneController : MonoBehaviour
 {
-    public class SceneController : SingleInstanceAutoBase<SceneController>
+    [Header("References")]
+    public RectTransform content; // 需要滚动的父物体
+    public float scrollSpeed = 50f; // 像素/秒
+
+    [Header("Settings")]
+    private float itemHeight = 110f; // 100高度 + 10间距
+    private float maskHeight = 450f;
+    private Vector2 startPos;
+
+    void Start()
     {
-        private SceneController() { }
+        // 禁用VerticalLayoutGroup的自动布局
+        Destroy(GetComponent<VerticalLayoutGroup>());
 
+        // 初始化参数
+        maskHeight = GetComponent<RectTransform>().rect.height;
+        itemHeight = 100f + 10f; // 元素高度 + 间距
 
-        [Header("Settuings")]
-        //当前
-        public Image image;
-        public float startSpeed = 0.1f;
-        public float acceleration = 0.01f;
-        public float interval = 0.5f;
-        public int spinRounds = 3;
-        public List<Color> colors = new();
+        // 手动排列子物体位置
+        ArrangeChildren();
 
-        [Header("Debug")]
-        [SerializeField] private int currentIndex = 0;
-        [SerializeField] private bool isSpinning = false;
-        [SerializeField] private int targetIndex = 0;
-        //初始化一些测试数据
-        public void Awake()
+        // 开始滚动
+        StartInfiniteScroll();
+    }
+
+    void ArrangeChildren()
+    {
+        float currentY = -10f; // 初始Top偏移
+        foreach (RectTransform child in content)
         {
-            colors.Add(Color.red);
-            colors.Add(Color.green);
-            colors.Add(Color.blue);
-            colors.Add(Color.yellow);
-            colors.Add(Color.magenta);
-            DOTween.Init();
-            //注册事件
-            Debug.Log("ScenceController 注册事件");
-            EventCenterManager.Instance().AddEventListener(GameController.SPIN_START, StartSpin);
-            EventCenterManager.Instance().AddEventListener(GameController.SPIN_STOP, StopSpin);
+            child.anchoredPosition = new Vector2(0, currentY);
+            currentY -= itemHeight; // 向下排列
         }
+    }
 
-        public void StartSpin()
-        {
-            if (isSpinning) return;
-            this.isSpinning = true;
-            MonoManager.Instance().StartCoroutine(SlideShow());
-        }
-        //轮播
-        IEnumerator SlideShow()
-        {
+    void StartInfiniteScroll()
+    {
+        // 计算完整滚动一个元素需要的时间
+        float duration = itemHeight / scrollSpeed;
 
-            while (isSpinning)
+        content.DOAnchorPosY(content.anchoredPosition.y + itemHeight, duration)
+            .SetEase(Ease.Linear)
+            .OnComplete(() =>
             {
-                if (colors.Count > 0)
-                {
-                   
-                    currentIndex = Random.Range(0, colors.Count);
-                    image.color = colors[currentIndex];
-                }
-                yield return new WaitForSeconds(interval);
-            }
-        }
-        
-        public void StopSpin()
+                // 将第一个元素移到最后
+                Transform firstChild = content.GetChild(0);
+                firstChild.SetAsLastSibling();
+
+                // 重置所有元素位置
+                ResetPositions();
+
+                // 继续下一次滚动
+                StartInfiniteScroll();
+            });
+    }
+
+    void ResetPositions()
+    {
+        // 调整所有子物体位置
+        float currentY = -10f;
+        foreach (RectTransform child in content)
         {
-            if (!isSpinning) return;
-            this.isSpinning = false;
-            MonoManager.Instance().StopCoroutine(SlideShow());
-            
+            child.anchoredPosition = new Vector2(0, currentY);
+            currentY -= itemHeight;
         }
 
-        private void OnDisable()
-        {
-            //注销事件
-            Debug.Log("ScenceController 注销事件");
-            EventCenterManager.Instance().RemoveEventListener(GameController.SPIN_START, StartSpin);
-            EventCenterManager.Instance().RemoveEventListener(GameController.SPIN_STOP, StopSpin);
-        }
+        // 重置content位置
+        content.anchoredPosition = Vector2.zero;
     }
 }

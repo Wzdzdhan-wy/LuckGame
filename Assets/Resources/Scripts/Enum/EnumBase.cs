@@ -8,35 +8,41 @@ namespace LuckGame
 {
     public enum CardRare
     {
-        COMMON = 0,
-        RARE = 1,
-        EPIC = 2,
-        LEGENDARY = 3,
-        MYTHIC = 4
+        COMMON ,
+        RARE,
+        EPIC,
+        LEGENDARY,
+        MYTHIC
     }
     public enum CardType
     {   
-        INHERIT = 0,
-        PROP = 1
+        INHERIT,
+        PROP 
         
     }
     public enum EffectType
     {
-        None = 0,
+        None,
     }
     public enum ItemType
     {
-        none = 0,
-        weapon = 1,
-        armor = 2,
+        none ,
+        weapon,
+        armor,
     }
     public enum GameController
     {
         OnItemAdded,
         OnRoundStart,
         OnCoinChanged,
+        OnItemAdd,
         SPIN_START,
         SPIN_STOP,
+        ShowUi,
+        HideUIForm,
+        CloseUIForm,
+        UnRegisterForm,
+        RegisterForm,
     }
  
 }
