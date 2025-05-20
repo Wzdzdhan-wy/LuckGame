@@ -1,76 +1,89 @@
 using DG.Tweening;
+using LuckGame;
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SceneController : MonoBehaviour
 {
-    [Header("References")]
-    public RectTransform content; // 需要滚动的父物体
-    public float scrollSpeed = 50f; // 像素/秒
 
-    [Header("Settings")]
-    private float itemHeight = 110f; // 100高度 + 10间距
-    private float maskHeight = 450f;
-    private Vector2 startPos;
-
+    private float scrollDuration;// 每个子项滚动所需时间
+   
+    [SerializeField] private RectTransform contentRect;
+    private float itemStep; // 每个子项移动的步长
+    [SerializeField] private List<Transform> list; // 子项列表
+                                                   
+    private Coroutine _scrollCoroutine;
+    public float decreaseSpeed = 0.2f;
+    private bool isStart = false; // 是否开始
+    private void Awake()
+    {
+       EventCenterManager.Instance.AddEventListener(GameController.StartGame, StartGame);
+    }
     void Start()
     {
-        // 禁用VerticalLayoutGroup的自动布局
-        Destroy(GetComponent<VerticalLayoutGroup>());
 
-        // 初始化参数
-        maskHeight = GetComponent<RectTransform>().rect.height;
-        itemHeight = 100f + 10f; // 元素高度 + 间距
+        // 计算移动步长：子项高度 + 间隔
+        itemStep = 100f;
+       
+       
+    }
+ 
+      
+    
+    
+    public void StartGame()
+    {
+        if (!isStart) {
+        isStart = true;
+        scrollDuration  = 0.1f;
+            if (_scrollCoroutine != null)
+                MonoManager.Instance.StopCouroutine(_scrollCoroutine);
 
-        // 手动排列子物体位置
-        ArrangeChildren();
+            _scrollCoroutine = MonoManager.Instance.StartCoroutine(StartInfiniteScroll());
+            MonoManager.Instance.StartCoroutine(StopInfiniteScroll());
+        }
+    }
+    IEnumerator StopInfiniteScroll()
+    {
+        yield return new WaitForSeconds(1f);
+        float duration = 1f; // 渐变持续时间
+        float startValue = scrollDuration;
+        float elapsed = 0;
 
-        // 开始滚动
-        StartInfiniteScroll();
+        while (elapsed < duration)
+        {
+            scrollDuration = Mathf.Lerp(startValue, 1f, elapsed / duration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+     
+        isStart = false;
     }
 
-    void ArrangeChildren()
+    IEnumerator StartInfiniteScroll()
     {
-        float currentY = -10f; // 初始Top偏移
-        foreach (RectTransform child in content)
+        while (isStart) // 改用循环代替递归
         {
-            child.anchoredPosition = new Vector2(0, currentY);
-            currentY -= itemHeight; // 向下排列
+            float currentY = contentRect.anchoredPosition.y;
+            float targetY = currentY - itemStep;
+
+            // 使用异步等待代替回调
+            yield return contentRect.DOAnchorPosY(targetY, scrollDuration)
+                .SetEase(Ease.Linear)
+                .WaitForCompletion();
+
+            // 完成移动后操作
+            Transform firstChild = contentRect.GetChild(contentRect.childCount - 1);
+            TextMeshProUGUI text = firstChild.GetChild(0).GetComponent<TextMeshProUGUI>();
+            text.text = Random.Range(1, 100).ToString();
+            firstChild.SetAsFirstSibling();
+            contentRect.anchoredPosition = new Vector2(contentRect.anchoredPosition.x, currentY);
         }
     }
 
-    void StartInfiniteScroll()
-    {
-        // 计算完整滚动一个元素需要的时间
-        float duration = itemHeight / scrollSpeed;
 
-        content.DOAnchorPosY(content.anchoredPosition.y + itemHeight, duration)
-            .SetEase(Ease.Linear)
-            .OnComplete(() =>
-            {
-                // 将第一个元素移到最后
-                Transform firstChild = content.GetChild(0);
-                firstChild.SetAsLastSibling();
-
-                // 重置所有元素位置
-                ResetPositions();
-
-                // 继续下一次滚动
-                StartInfiniteScroll();
-            });
-    }
-
-    void ResetPositions()
-    {
-        // 调整所有子物体位置
-        float currentY = -10f;
-        foreach (RectTransform child in content)
-        {
-            child.anchoredPosition = new Vector2(0, currentY);
-            currentY -= itemHeight;
-        }
-
-        // 重置content位置
-        content.anchoredPosition = Vector2.zero;
-    }
 }

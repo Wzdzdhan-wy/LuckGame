@@ -43,6 +43,16 @@ namespace LuckGame
         CloseUIForm,
         UnRegisterForm,
         RegisterForm,
+        CloseAllUIForm,
+        StartGame,
+        InitGameData,
+    }
+    public enum FormAnimType
+    {
+        None,
+        Fade,
+        Zoom
+
     }
  
 }

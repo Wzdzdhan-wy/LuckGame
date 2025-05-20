@@ -2,34 +2,48 @@
 using UnityEngine;
 namespace LuckGame
 {
+    //管理UI
+    /// <summary>
+    /// 用于界面管理，继承单例模式，提供以下功能：
+    /// 1. 注册UI
+    /// 2. 显示UI
+    /// 3. 关闭UI
+    /// 4. 隐藏UI
+    /// 5. 关闭所有UI
+    /// </summary>
     public class UiManager :SingleInstanceAutoBase<UiManager>
     {
+        //单例模式
         private void UiManage() { }
 
       
-       
+        //创建UI的字典用于存储UI
         Dictionary<string, UIFromBase> forms = new();
 
-       
-        public List<UIFromBase> showFroms = new();
+        //UI列表
+        private List<UIFromBase> showFroms = new();
+        //UI根节点
         public Transform uiRoot
         {
             get { return GameObject.Find("UIRoot").transform; }
         }
 
 
-
+        //初始化
         private void Awake()
         {
-            EventCenterManager.Instance().AddEventListener<string>( GameController.ShowUi, ShowUiForm);
-            EventCenterManager.Instance().AddEventListener<string>(GameController.HideUIForm, HideUIForm);
-            EventCenterManager.Instance().AddEventListener<string>(GameController.CloseUIForm, CloseUIForm);
+            EventCenterManager.Instance.AddEventListener<string>(GameController.ShowUi, ShowUIForm);
+            EventCenterManager.Instance.AddEventListener<string>(GameController.HideUIForm, HideUIForm);
+            EventCenterManager.Instance.AddEventListener<string>(GameController.CloseUIForm, CloseUIForm);
+            EventCenterManager.Instance.AddEventListener(GameController.CloseAllUIForm, CloseAllUIForm);
+            EventCenterManager.Instance.AddEventListener<IUIForm>(GameController.RegisterForm, RegisterForm);
+            EventCenterManager.Instance.AddEventListener<IUIForm>(GameController.UnRegisterForm, UnRegisterForm);
         }
 
 
 
         //添加UI
-        public void RegisterForm(IUIForm ui)
+        private void RegisterForm(IUIForm ui)
         {
            
             if (ui == null) return;
@@ -45,11 +59,9 @@ namespace LuckGame
             {
                 forms[form.name] = form;
             }
-          
-           
         }
         //移除UI
-        public void UnRegisterForm(IUIForm ui)
+        private void UnRegisterForm(IUIForm ui)
         {
             if (ui == null) return;
             Debug.Log("注销UI");
@@ -59,8 +71,8 @@ namespace LuckGame
             }
            
         }
-       
-        public void ShowUiForm(string uiName)
+        //显示UI
+        private void ShowUIForm(string uiName)
         {
             
             if (!forms.ContainsKey(uiName))return;
@@ -74,7 +86,8 @@ namespace LuckGame
                
             }
         }
-        public void CloseUIForm(string uiName)
+        //关闭UI
+        private void CloseUIForm(string uiName)
         {
            
             if (forms.ContainsKey(uiName))
@@ -88,25 +101,42 @@ namespace LuckGame
                 }
             }
         }
-        public void HideUIForm(string uiName)
+        //隐藏UI
+        private void HideUIForm(string uiName)
         {
            if (!forms.ContainsKey(uiName)) return;
             var ui = forms[uiName];
 
             if (showFroms.Contains(ui))
             {
+
                 Debug.Log("隐藏UI");
                 ui.Close();
                 showFroms.Remove(ui);
             }
 
         }
+        //关闭所有UI
+        private void CloseAllUIForm()
+        {
+            foreach (var ui in showFroms)
+            {
+                ui.Close();
+            }
+            Clear();
+        }
+        //清空UI列表
+        private void Clear()
+        {
+            forms.Clear();
+            showFroms.Clear();
+        }
     }
 
     public interface IUIForm 
     {
-        void RegisterForm() =>UiManager.Instance().RegisterForm(this);
-        void UnRegisterForm() => UiManager.Instance().UnRegisterForm(this);
+        void RegisterForm() => EventCenterManager.Instance.TriggerEvent(GameController.RegisterForm, this);
+        void UnRegisterForm() => EventCenterManager.Instance.TriggerEvent(GameController.UnRegisterForm, this);
         UIFromBase GetUIFromBase();
     }
 

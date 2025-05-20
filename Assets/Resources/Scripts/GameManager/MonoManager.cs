@@ -104,7 +104,13 @@ namespace LuckGame {
         {
             FixedUpdateEvent?.Invoke();
         }
-        public void AddUpdateListener(UnityAction call)
+        private void OnDestroy()
+        {
+
+            UpdateEvent = null;
+            FixedUpdateEvent = null;
+        }
+    public void AddUpdateListener(UnityAction call)
         {
             UpdateEvent += call;
 

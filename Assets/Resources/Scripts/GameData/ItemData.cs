@@ -2,8 +2,9 @@
 
 namespace LuckGame
 {
-    internal class ItemData :ScriptableObject
+    class ItemData :ScriptableObject
     {
+      
 
     }
 }

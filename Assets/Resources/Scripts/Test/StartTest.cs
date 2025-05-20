@@ -12,13 +12,13 @@ public class StartTest : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.A))
         {
             Debug.Log("A");
-            EventCenterManager.Instance().TriggerEvent(GameController.ShowUi, "Item");
-            UiManager.Instance().ShowUiForm("Item");
+            EventCenterManager.Instance.TriggerEvent(GameController.ShowUi, "Item");
+           
         }
         if(Input.GetKeyDown(KeyCode.B))
         {
             Debug.Log("B");
-            EventCenterManager.Instance().TriggerEvent(GameController.HideUIForm, "Item");
+            EventCenterManager.Instance.TriggerEvent(GameController.HideUIForm, "Item");
             
         }
     }

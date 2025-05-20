@@ -11,15 +11,18 @@ public class SingleInstanceBase<T> where T :SingleInstanceBase<T>
     private static T instance;
     protected SingleInstanceBase() { }
 
-    public static T Instance(bool isPersistence = false)
-    {   
-        if(instance == null)
+    public static T Instance
+    {
+        get
         {
-             instance = Activator.CreateInstance(typeof(T),true) as T;
+            if (instance == null)
+            {
+                instance = Activator.CreateInstance(typeof(T), true) as T;
+            }
+            return instance;
         }
-       
-        return instance;
     }
-}
+    
+    }
 
 }

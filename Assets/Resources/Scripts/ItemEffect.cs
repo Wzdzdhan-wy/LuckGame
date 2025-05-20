@@ -1,7 +1,8 @@
 ﻿namespace LuckGame
 {
-    internal class ItemEffect
+    public class ItemEffect
     {
+        
         
 
 

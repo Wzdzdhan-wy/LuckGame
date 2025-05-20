@@ -6,20 +6,18 @@ namespace LuckGame {
     /// <summary>
     /// 玩家数据类
     /// </summary>
-    public class PlayerData : SingleInstanceBase<PlayerData>
+    public class PlayerData 
     {
-        private string playerName;
-        private int coins;
-        private int HP;
-        private int maxHP;
-        private int energy;
-        private int handLimit;
-        private int maxEnergy;
+       
+        private string PlayerName { get; set; }
+        private int playerCoins;
+        private int playerHP;
+        private int playerMaxHP;
+        private int playerEnergy;
+        private int playerMaxHand;
+        private int playerMaxEnergy;
         private List<Item> playerItems;
         private List<Card> playerCards;
-        private void PlayData() { }
-
-        
 
     }
 }
