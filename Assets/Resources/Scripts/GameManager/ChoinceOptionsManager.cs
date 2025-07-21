@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.Generic;
+using System.Globalization;
 
 namespace LuckGame
 {
@@ -13,7 +14,7 @@ namespace LuckGame
         //生成选项
         public void GenerateOptions()
         {
-
+          
         }
         //选项被选择
         public void OnOptionSelected(int option)

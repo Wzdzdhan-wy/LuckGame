@@ -5,7 +5,5 @@ using UnityEngine;
 namespace LuckGame {
     public class UiTest : UIFromBase
     {
-
-        
     }
 }

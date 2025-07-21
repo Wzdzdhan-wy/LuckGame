@@ -3,13 +3,27 @@ using UnityEngine;
 
 namespace LuckGame
 {
-    public class Item :MonoBehaviour
+    // Item数据信息
+
+    public struct ItemInfo
     {
-        private Canvas canvas;
-        private int itemId;
-        private string itmeName;
-        private int itemType;
-        private string description;
+
+        public int id;
+        public string name;
+        public string description;
+        public int type;
+        public int value;
+    }
+    public class Item :ItemBase
+    {
+        private  ItemInfo itemInfo;
+
+
+        public virtual void SetItemInfo(ItemInfo itemInfo)
+        {
+            this.itemInfo = itemInfo;
+        }
+
         
 
     }

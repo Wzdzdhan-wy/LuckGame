@@ -18,12 +18,9 @@ namespace LuckGame {
        
         public void Start()
         {
-            
+           MonoManager.Instance.AddFixedUpdateListener(CoinChanged);
         }
 
-     
-        
-       
         //事件处理函数 :硬币结算
         private void CoinChanged()
         {
@@ -36,6 +33,7 @@ namespace LuckGame {
             EventCenterManager.Instance.TriggerEvent(GameController.SPIN_START);
 
         }
+
         //事件处理函数：道具添加
         private void ItemAdd(Item item)
         {

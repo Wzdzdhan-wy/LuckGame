@@ -28,7 +28,7 @@ public class SceneController : MonoBehaviour
 
         // 计算移动步长：子项高度 + 间隔
         itemStep = 100f;
-       
+        
        
     }
  
@@ -41,7 +41,7 @@ public class SceneController : MonoBehaviour
         isStart = true;
         scrollDuration  = 0.1f;
             if (_scrollCoroutine != null)
-                MonoManager.Instance.StopCouroutine(_scrollCoroutine);
+                MonoManager.Instance.StopCoroutine(_scrollCoroutine);
 
             _scrollCoroutine = MonoManager.Instance.StartCoroutine(StartInfiniteScroll());
             MonoManager.Instance.StartCoroutine(StopInfiniteScroll());
@@ -60,6 +60,7 @@ public class SceneController : MonoBehaviour
             elapsed += Time.deltaTime;
             yield return null;
         }
+     
      
         isStart = false;
     }

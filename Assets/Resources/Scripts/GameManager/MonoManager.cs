@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 namespace LuckGame {
 
     //MonoManager 单例管理器
@@ -24,16 +26,22 @@ namespace LuckGame {
                 return monoController;
             }    
         }
-        public void Init()
-        {
-          
-        }
+ 
         //启动协程       
         public Coroutine StartCoroutine(IEnumerator routine)
         {
 
            return MonoExecuter.StartCoroutine(routine);
 
+        }
+
+
+
+        public Coroutine StartCoroutine(IEnumerable enumerable)
+        {
+            
+            IEnumerator enumerator = enumerable.GetEnumerator();
+            return MonoExecuter.StartCoroutine(enumerator);
         }
         //停止协程
         public void StopCoroutine(IEnumerator routine)
@@ -42,7 +50,7 @@ namespace LuckGame {
             MonoExecuter.StopCoroutine(routine);  
         }
         //停止协程
-        public void StopCouroutine(Coroutine routine)
+        public void StopCoroutine(Coroutine routine)
         {
             if (routine == null) return;
             MonoExecuter.StopCoroutine(routine);
@@ -57,8 +65,8 @@ namespace LuckGame {
         public void AddUpdateListener(UnityAction listener)
         {
             MonoExecuter.AddUpdateListener(listener);
-
         }
+
         //移除Update事件
         public void RemoveUpdateListener(UnityAction listener)
         {
@@ -85,6 +93,7 @@ namespace LuckGame {
         {
             MonoExecuter.RemoveAllFixedUpdateListener();
         }
+
     }
 
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 namespace LuckGame {
     public class UIFromBase : MonoBehaviour, IUIForm
@@ -7,11 +8,18 @@ namespace LuckGame {
 
         private UiManager uiManager;
         private bool IsOpen = true;
+        private RectTransform rectTransform;
+        private Vector3 localPosition;
+        private Vector3 targetPosition;
         public FormAnimType formAnimType;
         private void Awake()
         {
             IUIForm uiForm = this;
             uiForm.RegisterForm();
+            localPosition = transform.position;
+          
+            targetPosition.y += 1000;
+            Debug.Log("UIFromBase Awake"+ Screen.height);
         }
         private void OnDestroy()
         {
@@ -26,6 +34,7 @@ namespace LuckGame {
         {
             if (IsOpen)
             {
+                
                 return;
             }
             IsOpen = true;
@@ -58,6 +67,8 @@ namespace LuckGame {
                     UIAnimation.FadeIn(gameObject);
                     break;
                 default:
+                case FormAnimType.Move:
+                    UIAnimation.MoveIn(gameObject,localPosition);
                     break;
             }
         }
@@ -73,6 +84,9 @@ namespace LuckGame {
                     break;
                 case FormAnimType.Zoom:
                     UIAnimation.ZoomOut(gameObject);
+                    break;
+                case FormAnimType.Move:
+                    UIAnimation.MoveOut(gameObject, targetPosition);
                     break;
                 default:
                     break;

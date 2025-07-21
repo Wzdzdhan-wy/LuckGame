@@ -1,6 +1,6 @@
 ﻿namespace LuckGame
 {
-    internal class SaveSystem
+     class SaveSystem
     {
         public bool SaveGame()
         {

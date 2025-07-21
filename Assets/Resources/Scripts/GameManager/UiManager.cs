@@ -20,7 +20,7 @@ namespace LuckGame
         //创建UI的字典用于存储UI
         Dictionary<string, UIFromBase> forms = new();
 
-        //UI列表
+        //已启动的UI列表
         private List<UIFromBase> showFroms = new();
         //UI根节点
         public Transform uiRoot
@@ -32,15 +32,27 @@ namespace LuckGame
         //初始化
         private void Awake()
         {
-            EventCenterManager.Instance.AddEventListener<string>(GameController.ShowUi, ShowUIForm);
-            EventCenterManager.Instance.AddEventListener<string>(GameController.HideUIForm, HideUIForm);
-            EventCenterManager.Instance.AddEventListener<string>(GameController.CloseUIForm, CloseUIForm);
-            EventCenterManager.Instance.AddEventListener(GameController.CloseAllUIForm, CloseAllUIForm);
-            EventCenterManager.Instance.AddEventListener<IUIForm>(GameController.RegisterForm, RegisterForm);
-            EventCenterManager.Instance.AddEventListener<IUIForm>(GameController.UnRegisterForm, UnRegisterForm);
+           
+            
+            EventCenterManager.Instance.AddEventListener<string>(UIController.ShowUi, ShowUIForm);
+            EventCenterManager.Instance.AddEventListener<string>(UIController.HideUIForm, HideUIForm);
+            EventCenterManager.Instance.AddEventListener<string>(UIController.CloseUIForm, CloseUIForm);
+            EventCenterManager.Instance.AddEventListener(UIController.CloseAllUIForm, CloseAllUIForm);
+            EventCenterManager.Instance.AddEventListener<IUIForm>(UIController.RegisterForm, RegisterForm);
+            EventCenterManager.Instance.AddEventListener<IUIForm>(UIController.UnRegisterForm, UnRegisterForm);
+           
         }
 
-
+        private void OnDisable()
+        {
+            EventCenterManager.Instance.RemoveEventListener<string>(UIController.ShowUi, ShowUIForm);
+            EventCenterManager.Instance.RemoveEventListener<string>(UIController.HideUIForm, HideUIForm);
+            EventCenterManager.Instance.RemoveEventListener<string>(UIController.CloseUIForm, CloseUIForm);
+            EventCenterManager.Instance.RemoveEventListener(UIController.CloseAllUIForm, CloseAllUIForm);
+            EventCenterManager.Instance.RemoveEventListener<IUIForm>(UIController.RegisterForm, RegisterForm);
+            EventCenterManager.Instance.RemoveEventListener<IUIForm>(UIController.UnRegisterForm, UnRegisterForm);
+            Clear();
+        }
 
         //添加UI
         private void RegisterForm(IUIForm ui)
@@ -49,7 +61,7 @@ namespace LuckGame
             if (ui == null) return;
         
             var form = ui.GetUIFromBase();
-            Debug.Log("注册UI" + form.name);
+
             if ((!forms.ContainsKey(form.name)))
             {
                 forms.Add(form.name, form);
@@ -64,7 +76,7 @@ namespace LuckGame
         private void UnRegisterForm(IUIForm ui)
         {
             if (ui == null) return;
-            Debug.Log("注销UI");
+
             var form = ui.GetUIFromBase();
             if (forms.ContainsKey(form.name)){
                 forms.Remove(form.name);
@@ -76,8 +88,9 @@ namespace LuckGame
         {
             
             if (!forms.ContainsKey(uiName))return;
-            Debug.Log("显示UI");
+            Debug.Log("显示UI"+uiName);
             var ui = forms[uiName];
+            Debug.Log("显示UI" + ui.name);
             Debug.Log(ui.name);
             if (ui != null)
             {
@@ -85,6 +98,10 @@ namespace LuckGame
                 showFroms.Add(ui);
                
             }
+        }
+        private void ShowUIForm<T>()
+        {
+           ShowUIForm(typeof(T).Name);
         }
         //关闭UI
         private void CloseUIForm(string uiName)
@@ -100,6 +117,10 @@ namespace LuckGame
                     showFroms.Remove(ui);
                 }
             }
+        }
+        private void CloseUIForm<T>()
+        {
+            CloseUIForm(typeof(T).Name);
         }
         //隐藏UI
         private void HideUIForm(string uiName)
@@ -135,9 +156,8 @@ namespace LuckGame
 
     public interface IUIForm 
     {
-        void RegisterForm() => EventCenterManager.Instance.TriggerEvent(GameController.RegisterForm, this);
-        void UnRegisterForm() => EventCenterManager.Instance.TriggerEvent(GameController.UnRegisterForm, this);
+        void RegisterForm() => EventCenterManager.Instance.TriggerEvent(UIController.RegisterForm, this);
+        void UnRegisterForm() => EventCenterManager.Instance.TriggerEvent(UIController.UnRegisterForm, this);
         UIFromBase GetUIFromBase();
     }
-
 }

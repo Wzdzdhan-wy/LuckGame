@@ -1,18 +1,19 @@
+using LuckGame;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardData : MonoBehaviour
+public class CardData : CardBase
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    
 
-    // Update is called once per frame
-    void Update()
+    private List<Card> cards = new();
+ 
+
+
+    public void SetCards(List<Card> cards)
     {
-        
+        this.cards = cards;
     }
+    
 }
